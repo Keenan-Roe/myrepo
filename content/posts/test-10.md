@@ -1,10 +1,10 @@
 +++
-title = "Test 10"
+title = "Test 1"
 tags = ["test"]
-date = "1012-01-01"
+date = "2021-01-01"
 +++
 
-Test 10
+Test 1
 I am referencing a footnote[^1]
 
 ```go {linenos=inline}
