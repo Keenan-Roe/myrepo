@@ -66,3 +66,27 @@ paginate = 8
   #  lightColor = "#d6d6d6"
   #  lightestColor = "#d3d3d3"
   #  primaryColor = "#ffffff"
+
+  # My blue theme
+ [params.style]
+   darkestColor = "#161b47"
+   darkcolor = "#2d336b"
+   lightColor = "#afbac4"
+   lightestColor = "#ffffff"
+   primaryColor = "#5ba0b5"
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
