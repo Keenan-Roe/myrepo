@@ -16,6 +16,10 @@ menu:
       name: About
       url: /about/
       weight: 3
+    - identifier: resume
+      name: resume
+      url: /resume/
+      weight: 3
 params:
   author: Keenan Roe
   description: A future data scientist learning more every day.
