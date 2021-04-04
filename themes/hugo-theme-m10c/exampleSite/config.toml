@@ -1,5 +1,5 @@
 baseURL = "https://keenan-roe.netlify.app/"
-title = "Your title"
+title = "Website of Keenan Roe"
 themesDir = "../.."
 theme = "m10c"
 paginate = 8
@@ -22,17 +22,21 @@ paginate = 8
     weight = 3
 
 [params]
-  author = "John Doe"
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  author = "Keenan Roe"
+  description = "A future data scientist learning more every day."
   menu_item_separator = " - "
   [[params.social]]
     icon = "github"
     name = "Github"
-    url = "https://github.com/gohugoio"
+    url = "https://github.com/Keenan-Roe"
   [[params.social]]
     icon = "twitter"
     name = "Twitter"
-    url = "https://twitter.com/gohugoio"
+    url = "https://twitter.com/Keenan_Roe"
+  [[params.social]]
+    icon="mail"
+    name="email"
+    url="mailto:keenan.roe@hotmail.com"
 
   # Default theme
   #[params.style]
