@@ -1,4 +1,4 @@
-baseURL = "keenan-roe.netlify.app"
+baseURL = "keenan-roe.netlify.app/"
 title = "Your title"
 themesDir = "../.."
 theme = "m10c"
