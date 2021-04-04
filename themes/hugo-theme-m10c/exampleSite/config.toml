@@ -20,6 +20,11 @@ paginate = 8
     name = "About"
     url = "/about/"
     weight = 3
+  [[menu.main]]
+    identifier = "resume"
+    name = "resume"
+    url = "/resume/"
+    weight = 3
 
 [params]
   author = "Keenan Roe"
