@@ -1,0 +1,242 @@
+---
+title: "Final Project"
+author: "Keenan Roe"
+date: "November 22, 2019"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r eval=FALSE, echo=FALSE}
+
+setwd("C:\\Users\\keena\\OneDrive\\Documents\\stats 382\\Final Project")
+
+mydata<-read.csv("diabetes2.csv")
+
+require("corrplot")
+library(aod)
+library(ggplot2)
+attach(mydata)
+
+summary(mydata)
+
+dataIQR<-sapply(mydata, IQR)
+
+boxplot(mydata)
+
+boxplot(BloodPressure, Glucose, names = c("Blood Pressure", "Glucose"), col=c("Red", "Gold"))
+
+boxplot(SkinThickness, BMI, Age, Pregnancies, names=c("Skin Thiccness", "BMI", "Age", "Pregnancies"), col=c("Magenta", "darkslategray1", "lightsalmon", "blue"))
+
+boxplot(Insulin, col=c("Red"))
+
+length(Insulin)
+boxplot(Insulin[!Insulin %in% boxplot.stats(Insulin)$out])
+
+newVect<-Insulin[!Insulin %in% boxplot.stats(Insulin)$out & Insulin!=0]
+newVect1<-Outcome[!Insulin %in% boxplot.stats(Insulin)$out & Insulin!=0]
+
+boxplot(newVect~newVect1, col=c("blue"), border=c("red") , frame=F)
+
+
+```
+
+```{r}
+hist(mydata$Pregnancies)
+hist(mydata$Glucose[Glucose!=0])
+hist(mydata$BloodPressure[BloodPressure!=0])
+hist(mydata$SkinThickness[SkinThickness!=0])
+hist(mydata$Insulin)
+hist(mydata$BMI)
+hist(mydata$DiabetesPedigreeFunction)
+hist(mydata$Age)
+hist(Outcome)
+
+barplot(table(Outcome), col= c( "salmon", "deepskyblue"))
+
+```
+
+```{r}
+
+# lower=quantile(mydata$Pregnancies)[2]
+# upper=quantile(mydata$Pregnancies)[4]
+# iqr=IQR(mydata$Pregnancies)
+# max = (iqr*1.5) + upper
+# min = lower - (iqr *1.5)
+# result<- mydata$Pregnancies[mydata$Pregnancies > max | mydata$Pregnancies < min]
+# length(result)
+# min(result)
+# max(result)
+
+boxplot(mydata$Pregnancies)$out
+boxplot(mydata$Glucose)$out
+boxplot(mydata$BloodPressure)$out
+boxplot(mydata$SkinThickness)$out
+boxplot(mydata$Insulin)$out
+boxplot(mydata$BMI)$out
+boxplot(mydata$DiabetesPedigreeFunction)$out
+boxplot(mydata$Age)$out
+boxplot(mydata$Outcome)$out
+```
+
+```{r}
+cor(mydata$Pregnancies,mydata$Outcome)
+cor(mydata$Glucose,mydata$Outcome)
+cor(mydata$BloodPressure,mydata$Outcome)
+cor(mydata$SkinThickness,mydata$Outcome)
+cor(mydata$BMI,mydata$Outcome)
+cor(mydata$Age,mydata$Outcome)
+cor(mydata$DiabetesPedigreeFunction,mydata$Outcome)
+
+head(mydata)
+heatmap(as.matrix(mydata))
+heatmap(as.matrix(cor(mydata)))
+```
+
+```{r}
+
+
+mydata$Outcome<-factor(mydata$Outcome)
+
+myReg<-glm(Outcome~ Pregnancies + Glucose + BloodPressure + SkinThickness + Insulin + BMI + DiabetesPedigreeFunction + Age, data=mydata,family="binomial")
+summary(myReg)
+plot(myReg)
+
+wald.test(b = coef(myReg), Sigma = vcov(myReg), Terms = 1:9)
+
+myReg1<-glm(Outcome~DiabetesPedigreeFunction, data=mydata, family="binomial")
+summary(myReg1)
+
+myReg2<-glm(Outcome~BMI, data=mydata, family="binomial")
+summary(myReg2)
+
+myReg3<-glm(Outcome~Glucose, data=mydata, family="binomial")
+summary(myReg3)
+
+mean(Glucose)
+sd(Glucose)
+
+myReg4<-glm(Outcome~BloodPressure, data=mydata, family="binomial")
+summary(myReg4)
+
+mean(BloodPressure)
+
+myReg5<-glm(Outcome~Insulin, data=mydata, family="binomial")
+summary(myReg5)
+
+myReg6<-glm(Outcome~Age,data=mydata,family="binomial")
+summary(myReg6)
+mean(Age)
+max(Age)
+
+myReg7<-glm(Outcome~Pregnancies,data=mydata,family="binomial")
+summary(myReg7)
+
+mean(Pregnancies)
+max(Pregnancies)
+
+myReg8<-glm(Outcome~SkinThickness, data=mydata,family="binomial")
+summary(myReg8)
+
+mean(SkinThickness)
+max(SkinThickness)
+
+exp(coef(myReg))
+exp(cbind(OR = coef(myReg), confint(myReg)))
+
+newdata1 <- with(mydata, data.frame(Pregnancies = mean(Pregnancies), Glucose = mean(Glucose), BloodPressure = mean(BloodPressure), SkinThickness = mean(SkinThickness), Insulin = mean(Insulin), BMI = mean(BMI), DiabetesPedigreeFunction = mean(DiabetesPedigreeFunction), Age = mean(Age), Outcome = factor(0:1)))
+
+newdata1$OutcomeP <- predict(myReg, newdata = newdata1, type="response")
+
+newdata2 <- with(mydata, data.frame(Pregnancies = rep(seq(from = 200, to = 800, length.out = 100),8), Glucose=mean(Glucose), Outcome = factor(rep(0:1, each = 100))))
+
+newdata3 <- cbind(newdata2, predict(myReg, newdata = newdata2, type = "link",
+    se = TRUE))
+newdata3 <- within(newdata3, {
+    PredictedProb <- plogis(fit)
+    LL <- plogis(fit - (1.96 * se.fit))
+    UL <- plogis(fit + (1.96 * se.fit))
+})
+
+regTest<-lm(as.numeric(Outcome)~DiabetesPedigreeFunction)
+
+wald.test(b = coef(myReg1), Sigma = vcov(myReg1) , Terms = 2)
+
+```
+
+```{r}
+boxplot(mydata$BMI, mydata$Age )
+
+plot(reg)
+correl<-cor(mydata)
+corrplot(correl,method ="number", number.cex=.7)
+corrplot(correl,method="square")
+corrplot.mixed(correl, number.cex = .7)
+
+pairs(mydata,col=Outcome)
+
+bp<-which(BloodPressure!=0)
+
+regDPF<-lm(DiabetesPedigreeFunction[bp]~BloodPressure[bp])
+plot(DiabetesPedigreeFunction[bp],BloodPressure[bp])
+abline(regDPF, col="red")
+
+regGluc<-lm(DiabetesPedigreeFunction~Glucose)
+plot(DiabetesPedigreeFunction,Glucose)
+abline(regGluc, col="red")
+
+regIns<-lm(DiabetesPedigreeFunction~Insulin)
+plot(DiabetesPedigreeFunction,Insulin)
+abline(regIns)
+
+regBMIG<-lm(BMI~Glucose)
+plot(BMI,Glucose)
+abline(regBMIG)
+
+nonZero<-Glucose[Glucose!=0 & BloodPressure!=0]
+
+regBPG<-lm(BloodPressure[nonZero]~Glucose[nonZero])
+plot(BloodPressure[nonZero], Glucose[nonZero], xlab="Blood Pressure", ylab="Glucose")
+abline(regBPG, col="red")
+
+regAgeP<-lm(Pregnancies~Age)
+plot(Pregnancies,Age)
+abline(regAgeP, col="red")
+summary(regAgeP)
+plot(regAgeP)
+
+nonZero1<-(Insulin!=0&Glucose!=0)
+
+regInsGluc<-lm(Insulin[nonZero1]~Glucose[nonZero1])
+plot(Insulin[nonZero1], Glucose[nonZero1])
+abline(regInsGluc)
+
+newIns<-Insulin[!Insulin %in% boxplot.stats(Insulin)$out]
+
+plot(regInsGluc)
+
+regAgeGl<-lm(Age~Glucose)
+plot(Age, Glucose)
+abline(regAgeGl)
+
+regAgeB<-lm(Age~BMI)
+plot(Age, BMI)
+abline(regAgeB)
+plot(regAgeB)
+summary(regAgeB)
+
+fit<-aov(Age~BMI, data=mydata)
+
+qm<-BloodPressure!=0 & BMI!=0
+
+regBPBM<-(BloodPressure[qm]~BMI[qm])
+plot(BloodPressure[qm],BMI[qm])
+abline(regBPBM)
+
+mean(regBPBM$residuals)
+
+```
