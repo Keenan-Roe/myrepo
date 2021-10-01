@@ -9,3 +9,11 @@ tags: []
 ---
 
 This is a test
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r eval=FALSE, echo=FALSE}
+
+setwd("C:\\Users\\keena\\OneDrive\\Documents\\stats 382\\Final Project")
