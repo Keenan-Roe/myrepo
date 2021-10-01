@@ -14,12 +14,13 @@ Now is the time to do this
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r eval=TRUE, echo=FALSE}
-
-require("corrplot")
+```{r eval=FALSE, echo=FALSE}
+library(corrplot)
 library(aod)
 library(ggplot2)
+```
 
+```{r eval=TRUE, echo=FALSE}
 
 mydata<- read.csv("diabetes2.csv")
 attach(mydata)
