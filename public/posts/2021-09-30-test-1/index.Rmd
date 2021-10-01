@@ -8,4 +8,22 @@ categories:
 tags: []
 ---
 
-This is a test
+This is a test. I will output data into onto my site.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r eval=FALSE, echo=FALSE}
+
+mydata<- read.csv("diabetes2.csv")
+summary(mydata)
+
+
+```
+
+
+
+
+
+
